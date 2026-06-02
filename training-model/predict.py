@@ -9,7 +9,7 @@ from torchvision.datasets import ImageFolder
 # CONFIG
 # -----------------------
 
-IMAGE_PATH = "image.png"
+IMAGE_PATH = "/home/tioca/Documents/unisc-7/IA-TRABALHO-RNA/training-model/dataset_t1c/test/Astrocytoma/T1C+ - Diffuse astrocytoma NOS (protoplasmic) temporal 008.jpg"
 MODEL_PATH = "best_model.pth"
 
 device = torch.device(
@@ -20,7 +20,7 @@ device = torch.device(
 # CLASSES
 # -----------------------
 
-dataset = ImageFolder("dataset_t1c")
+dataset = ImageFolder("dataset_t1c/train")
 
 classes = dataset.classes
 
@@ -67,42 +67,57 @@ model.eval()
 # IMAGEM
 # -----------------------
 
-image = Image.open(
-    IMAGE_PATH
-)
-
-image = transform(image)
-
-image = image.unsqueeze(0) # type: ignore
-
-image = image.to(device)
-
-# -----------------------
-# PREDIÇÃO
-# -----------------------
-
-with torch.no_grad():
-
-    outputs = model(image)
-
-    probs = torch.softmax(
-        outputs,
-        dim=1
+def analize_image(image_path):
+    image = Image.open(
+        image_path
     )
 
-    confidence, pred = torch.max(
-        probs,
-        1
+    image = transform(image)
+
+    image = image.unsqueeze(0) # type: ignore
+
+    image = image.to(device)
+
+    # -----------------------
+    # PREDIÇÃO
+    # -----------------------
+
+    with torch.no_grad():
+
+        outputs = model(image)
+
+        probs = torch.softmax(
+            outputs,
+            dim=1
+        )
+
+        confidence, pred = torch.max(
+            probs,
+            1
+        )
+
+    predicted_class = classes[
+        pred.item()
+    ] # type: ignore
+
+    print("\nResultado")
+    print("--------------------")
+    print("Classe:", predicted_class)
+    print(
+        "Confiança:",
+        f"{confidence.item()*100:.2f}%"
+    )
+    
+    
+while True:
+    image_path = input(
+        "\nDigite o caminho da imagem (ou 'sair' para encerrar): "
     )
 
-predicted_class = classes[
-    pred.item()
-] # type: ignore
+    if image_path.lower() == "sair":
+        break
 
-print("\nResultado")
-print("--------------------")
-print("Classe:", predicted_class)
-print(
-    "Confiança:",
-    f"{confidence.item()*100:.2f}%"
-)
+    try:
+        analize_image(image_path)
+    except Exception as e:
+        print("Erro ao processar a imagem:", e)

@@ -2,3 +2,4 @@ venv
 dataset
 dataset_t1c
 *.pth
+__pycache__
