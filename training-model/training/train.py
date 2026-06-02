@@ -82,7 +82,7 @@ def train():
             best_val_acc = val_accuracy
             torch.save(
                 model.state_dict(),
-                "../best_model.pth"
+                "best_model.pth"
             )
 
 if __name__ == "__main__":
