@@ -1,3 +1,4 @@
+import os
 import torch
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
@@ -81,7 +82,20 @@ def get_transforms():
     
     return train_transform, val_transform
 
-def get_dataloaders(batch_size=16):
+def _dataloader_kwargs():
+    """Mais workers + prefetch = CPU prepara batches enquanto a GPU treina."""
+    use_cuda = torch.cuda.is_available()
+    workers = min(8, os.cpu_count() or 4)
+    kwargs = {
+        "pin_memory": use_cuda,
+        "num_workers": workers,
+    }
+    if workers > 0:
+        kwargs["persistent_workers"] = True
+        kwargs["prefetch_factor"] = 4
+    return kwargs
+
+def get_dataloaders(batch_size=64):
     prepare_dataset()
     
     train_transform, val_transform = get_transforms()
@@ -89,20 +103,20 @@ def get_dataloaders(batch_size=16):
     train_ds = ImageFolder(str(TRAIN_DIR), transform=train_transform)
     val_ds = ImageFolder(str(VAL_DIR), transform=val_transform)
     
+    loader_kwargs = _dataloader_kwargs()
+    
     train_loader = DataLoader(
         train_ds,
         batch_size=batch_size,
         shuffle=True,
-        pin_memory=True,
-        num_workers=4
+        **loader_kwargs,
     )
     
     val_loader = DataLoader(
         val_ds,
         batch_size=batch_size,
         shuffle=False,
-        pin_memory=True,
-        num_workers=4
+        **loader_kwargs,
     )
     
     return train_loader, val_loader, train_ds.classes

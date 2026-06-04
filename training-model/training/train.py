@@ -10,19 +10,29 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from core.data import get_dataloaders
 from core.model import get_model
 
+BATCH_SIZE = 64  # aumente para 128 se couber na VRAM (erro CUDA OOM = diminua)
+
 def train():
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    use_cuda = torch.cuda.is_available()
+    device = torch.device('cuda' if use_cuda else 'cpu')
+
+    if use_cuda:
+        torch.backends.cudnn.benchmark = True
+        print(f"GPU: {torch.cuda.get_device_name(0)}")
     
     print("Preparando dados...")
-    train_loader, val_loader, classes = get_dataloaders(batch_size=16)
+    train_loader, val_loader, classes = get_dataloaders(batch_size=BATCH_SIZE)
     
     print(f"Classes identificadas: {len(classes)}")
+    print(f"Batch size: {BATCH_SIZE} | Workers: {train_loader.num_workers}")
     
     model = get_model(len(classes), device)
     
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
     criterion = nn.CrossEntropyLoss()
+    scaler = torch.amp.GradScaler(device.type) if use_cuda else None
     best_val_acc = 0
+    non_blocking = use_cuda
 
     print("Iniciando treinamento...")
     for epoch in range(10):
@@ -33,19 +43,27 @@ def train():
         train_loss = 0
 
         for imgs, labels in train_loader:
-            imgs, labels = imgs.to(device), labels.to(device)
-            optimizer.zero_grad()
-            outputs = model(imgs)
+            imgs = imgs.to(device, non_blocking=non_blocking)
+            labels = labels.to(device, non_blocking=non_blocking)
+            optimizer.zero_grad(set_to_none=True)
+
+            with torch.amp.autocast(device.type, enabled=use_cuda):
+                outputs = model(imgs)
+                loss = criterion(outputs, labels)
             
             _, preds = torch.max(outputs, 1)
             train_correct += (preds == labels).sum().item()
             train_total += labels.size(0)
 
-            loss = criterion(outputs, labels)
-            
-            loss.backward()
+            if scaler:
+                scaler.scale(loss).backward()
+                scaler.step(optimizer)
+                scaler.update()
+            else:
+                loss.backward()
+                optimizer.step()
+
             train_loss += loss.item()
-            optimizer.step()
             
         train_accuracy = 100 * train_correct / train_total
         avg_train_loss = train_loss / len(train_loader)
@@ -58,14 +76,16 @@ def train():
 
         with torch.no_grad():
             for imgs, labels in val_loader:
-                imgs, labels = imgs.to(device), labels.to(device)
-                outputs = model(imgs)
+                imgs = imgs.to(device, non_blocking=non_blocking)
+                labels = labels.to(device, non_blocking=non_blocking)
+
+                with torch.amp.autocast(device.type, enabled=use_cuda):
+                    outputs = model(imgs)
+                    loss = criterion(outputs, labels)
 
                 _, preds = torch.max(outputs, 1)
                 val_correct += (preds == labels).sum().item()
                 val_total += labels.size(0)
-                
-                loss = criterion(outputs, labels)
                 val_loss += loss.item()
                 
         val_accuracy = 100 * val_correct / val_total
