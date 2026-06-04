@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaCloudUploadAlt, FaRobot } from 'react-icons/fa';
+import { FaCloudUploadAlt } from 'react-icons/fa';
 import ErrorMessage from '../ErrorMessage';
 import {
   ACCEPTED_IMAGE_TYPES,
@@ -138,7 +138,6 @@ function UploadForm({ onSubmit, isLoading }: UploadFormProps): React.JSX.Element
         disabled={isLoading}
         aria-busy={isLoading}
       >
-        <FaRobot className={styles.buttonIcon} aria-hidden="true" />
         Analisar
       </button>
     </form>

@@ -1,10 +1,5 @@
 .header {
-  background: linear-gradient(
-    90deg,
-    var(--color-teal-dark) 0%,
-    var(--color-cyan) 50%,
-    var(--color-blue) 100%
-  );
+  background: var(--color-teal-dark);
   color: var(--color-white);
   padding: 1rem 1.5rem;
   box-shadow: var(--shadow-md);

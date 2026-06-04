@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaMicroscope, FaShieldAlt, FaStethoscope } from 'react-icons/fa';
-import { GiArtificialIntelligence } from 'react-icons/gi';
+import { FaStethoscope } from 'react-icons/fa';
 import Header from '../../components/Header';
 import Loading from '../../components/Loading';
 import PageContainer from '../../components/PageContainer';
@@ -35,10 +34,6 @@ function HomePage(): React.JSX.Element {
       <Header />
       <PageContainer>
         <section className={styles.hero}>
-          <GiArtificialIntelligence
-            className={styles.heroIcon}
-            aria-hidden="true"
-          />
           <h1 className={styles.title}>
             Classificação de Tumores Cerebrais por Inteligência Artificial
           </h1>
@@ -71,21 +66,6 @@ function HomePage(): React.JSX.Element {
             <ResultCard result={result} />
           </section>
         )}
-
-        <div className={styles.infoBar}>
-          <span className={styles.infoItem}>
-            <FaMicroscope className={styles.infoIcon} aria-hidden="true" />
-            ResNet18 CNN
-          </span>
-          <span className={styles.infoItem}>
-            <GiArtificialIntelligence className={styles.infoIcon} aria-hidden="true" />
-            Deep Learning
-          </span>
-          <span className={styles.infoItem}>
-            <FaShieldAlt className={styles.infoIcon} aria-hidden="true" />
-            Análise segura
-          </span>
-        </div>
       </PageContainer>
     </>
   );

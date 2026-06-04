@@ -101,11 +101,7 @@
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-white);
-  background: linear-gradient(
-    90deg,
-    var(--color-teal-dark) 0%,
-    var(--color-blue) 100%
-  );
+  background: var(--color-teal-dark);
   border-radius: var(--radius-md);
   transition: opacity var(--transition), transform var(--transition);
   box-shadow: var(--shadow-sm);
