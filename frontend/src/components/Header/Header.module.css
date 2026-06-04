@@ -1,0 +1,78 @@
+.header {
+  background: linear-gradient(
+    90deg,
+    var(--color-teal-dark) 0%,
+    var(--color-cyan) 50%,
+    var(--color-blue) 100%
+  );
+  color: var(--color-white);
+  padding: 1rem 1.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.headerInner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logoWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(4px);
+  flex-shrink: 0;
+}
+
+.logoIcon {
+  font-size: 1.75rem;
+  color: var(--color-white);
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.appName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.appTagline {
+  font-size: 0.8125rem;
+  opacity: 0.85;
+  font-weight: 400;
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0.875rem 1rem;
+  }
+
+  .logoWrapper {
+    width: 40px;
+    height: 40px;
+  }
+
+  .logoIcon {
+    font-size: 1.5rem;
+  }
+
+  .appName {
+    font-size: 1.0625rem;
+  }
+
+  .appTagline {
+    font-size: 0.75rem;
+  }
+}
