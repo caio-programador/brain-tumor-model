@@ -28,9 +28,9 @@ def train():
     
     model = get_model(len(classes), device)
     
-    optimizer = optim.Adam(model.parameters(), lr=1e-3)
+    optimizer = optim.Adam(model.parameters(), lr=1e-4)
     criterion = nn.CrossEntropyLoss()
-    scaler = torch.amp.GradScaler(device.type) if use_cuda else None
+    scaler = torch.amp.GradScaler(device.type) if use_cuda else None # type: ignore
     best_val_acc = 0
     non_blocking = use_cuda
 
@@ -47,7 +47,7 @@ def train():
             labels = labels.to(device, non_blocking=non_blocking)
             optimizer.zero_grad(set_to_none=True)
 
-            with torch.amp.autocast(device.type, enabled=use_cuda):
+            with torch.amp.autocast(device.type, enabled=use_cuda): # type: ignore
                 outputs = model(imgs)
                 loss = criterion(outputs, labels)
             
@@ -79,7 +79,7 @@ def train():
                 imgs = imgs.to(device, non_blocking=non_blocking)
                 labels = labels.to(device, non_blocking=non_blocking)
 
-                with torch.amp.autocast(device.type, enabled=use_cuda):
+                with torch.amp.autocast(device.type, enabled=use_cuda): # type: ignore
                     outputs = model(imgs)
                     loss = criterion(outputs, labels)
 

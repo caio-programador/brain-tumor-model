@@ -1,0 +1,19 @@
+{
+  "accuracy": 0.9775280898876404,
+  "macro_f1": 0.9742445583660821,
+  "weighted_f1": 0.9774952774372274,
+  "num_test_samples": 712,
+  "num_classes": 10,
+  "classes": [
+    "Astrocytoma",
+    "Ependymoma",
+    "Glioma",
+    "Hemangiopericytoma",
+    "Meningioma",
+    "Neurocytoma",
+    "Normal",
+    "Oligodendroglioma",
+    "Other",
+    "Schwannoma"
+  ]
+}

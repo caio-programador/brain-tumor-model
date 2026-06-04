@@ -1,0 +1,20 @@
+                    precision    recall  f1-score   support
+
+       Astrocytoma     1.0000    0.9104    0.9531        67
+        Ependymoma     0.9825    0.9825    0.9825        57
+            Glioma     0.9535    0.9880    0.9704        83
+Hemangiopericytoma     1.0000    1.0000    1.0000        47
+        Meningioma     0.9733    0.9865    0.9799       148
+       Neurocytoma     0.9750    1.0000    0.9873        39
+            Normal     0.9535    1.0000    0.9762        41
+ Oligodendroglioma     0.9032    0.9333    0.9180        30
+             Other     0.9912    0.9825    0.9868       114
+        Schwannoma     1.0000    0.9767    0.9882        86
+
+          accuracy                         0.9775       712
+         macro avg     0.9732    0.9760    0.9742       712
+      weighted avg     0.9781    0.9775    0.9775       712
+
+Acurácia no teste: 97.75%
+F1 macro: 0.9742
+F1 ponderado: 0.9775
