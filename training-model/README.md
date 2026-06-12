@@ -51,14 +51,14 @@ Se você já estiver usando o `venv/` que existe no projeto, basta ativá-lo ant
 3. Copie a pasta extraída para dentro da raiz do projeto com o nome `dataset/`.
 4. Verifique se dentro de `dataset/` existem pastas como `Astrocytoma T1C+`, `Meningioma T1C+`, `Normal T1C+` e assim por diante.
 
-Se quiser, a estrutura mínima precisa ser a mesma que o `train.py` espera: várias classes, cada uma com as imagens organizadas em subpastas.
+Se quiser, a estrutura mínima precisa ser a mesma que o `training/train.py` espera: várias classes, cada uma com as imagens organizadas em subpastas.
 
 ## Treinar o modelo
 
 Com o ambiente ativado e o dataset já colocado na pasta correta, rode:
 
 ```bash
-python train.py
+python training/train.py
 ```
 
 Durante a execução, o script:
@@ -72,28 +72,17 @@ No fim do treino, o arquivo `best_model.pth` deve estar na raiz do projeto.
 
 ## Fazer predição com uma imagem fora do dataset
 
-O `predict.py` espera uma imagem chamada `image.png` na raiz do projeto.
-
-Para prever com uma imagem externa ao dataset:
-
-1. escolha uma imagem nova, que não esteja dentro das pastas do dataset
-2. salve essa imagem como `image.png` na raiz do projeto, ou ajuste a variável `IMAGE_PATH` dentro de `predict.py`
-3. execute:
+O `testing/predict.py` está configurado para carregar o modelo treinado e fazer uma previsão com base no conteúdo de `dataset_t1c/test`. 
+Ele irá pegar as imagens de teste e irá coletar dados, como acurácia, predição, matriz de confusão, etc.
 
 ```bash
-python predict.py
+python testing/predict.py
 ```
-
-O script vai imprimir:
-
-1. as classes encontradas em `dataset_t1c/`
-2. a classe prevista
-3. a confiança da predição
 
 ## Observações importantes
 
 - O treino usa somente as imagens `T1C+`.
-- O `predict.py` precisa do arquivo `best_model.pth` gerado pelo treino.
+- O `testing/predict.py` precisa do arquivo `best_model.pth` gerado pelo treino.
 - Se você trocar a ordem ou o conteúdo das pastas em `dataset_t1c/`, a lista de classes usada na predição pode mudar.
 - Para testar a predição, use uma imagem externa ao dataset e no mesmo estilo de entrada esperado pelo modelo, de preferência uma imagem em tons de cinza de ressonância magnética.
 
@@ -102,6 +91,6 @@ O script vai imprimir:
 ```bash
 source venv/bin/activate
 pip install -r requirements.txt
-python train.py
-python predict.py
+python training/train.py
+python testing/predict.py
 ```
